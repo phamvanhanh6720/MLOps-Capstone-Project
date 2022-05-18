@@ -1,0 +1,5 @@
+.idea
+**/*.pyc
+crawling/crawler/settings.pyc
+crawling/test_upload_file.py
+.env

@@ -32,8 +32,8 @@ class BonbanhSpider(scrapy.Spider):
         self.num_ood_posts = 0
 
         self.mode = config('MODE')
-        self.app_id = config('APP-ID')
-        self.api_key = config('API-KEY')
+        self.app_id = config('APP_ID')
+        self.api_key = config('API_KEY')
         self.collection = config('COLLECTION')
         self.database = config('DATABASE')
         self.datasource = config('DATASOURCE')

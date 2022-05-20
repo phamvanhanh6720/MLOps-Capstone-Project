@@ -11,6 +11,7 @@ BOT_NAME = 'crawler'
 
 SPIDER_MODULES = ['crawler.spiders']
 NEWSPIDER_MODULE = 'crawler.spiders'
+SCRAPEOPS_API_KEY = '79826398-ea87-4afd-81de-175c621f8b4b'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -53,12 +54,19 @@ ROBOTSTXT_OBEY = True
 #DOWNLOADER_MIDDLEWARES = {
 #    'crawler.middlewares.CrawlerDownloaderMiddleware': 543,
 #}
+DOWNLOADER_MIDDLEWARES = {
+        'scrapeops_scrapy.middleware.retry.RetryMiddleware': 550,
+        'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
+        }
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
+EXTENSIONS = {
+        'scrapeops_scrapy.extension.ScrapeOpsMonitor': 500,
+        }
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html

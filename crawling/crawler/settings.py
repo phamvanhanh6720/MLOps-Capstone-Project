@@ -96,7 +96,7 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 
-MAX_OOD_POSTS = 500
+MAX_OOD_POSTS = 2000
 
 # 2 modes: all or previous-date
 MODE = 'previous-date'

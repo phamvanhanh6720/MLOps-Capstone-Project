@@ -96,10 +96,4 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 
-MAX_OOD_POSTS = 500
-
-# 2 modes: all or previous-date
-MODE = 'previous-date'
-STORAGE_ACCOUNT_NAME = 'mlopscapstone'
-STORAGE_ACCOUNT_KEY = 'FnIP2EZBv8d7lN6PpQLPtVj+znanRHIhS7puzUO48HLp0N2xlvatDaEWIgJdI+tBW+xD3jX03Ub++AStpuGUmA=='
-
+MAX_OOD_POSTS = 5000

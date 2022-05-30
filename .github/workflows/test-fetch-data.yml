@@ -1,0 +1,28 @@
+name: Test fetching data
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 'features/data-extraction'
+jobs:
+  fetch-data:
+    runs-on: ubuntu-18.04
+    env:
+      MONGO_API_KEY: ${{ secrets.MONGO_API_KEY }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Test fetch data
+        run: |
+          cd components/test
+          python3 data-extraction.py

@@ -24,4 +24,5 @@ jobs:
           pip install -r requirements.txt
       - name: Test fetch data
         run: |
+          cd components/test
           python3 tests/data-extraction.py

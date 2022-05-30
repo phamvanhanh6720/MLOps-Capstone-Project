@@ -1,11 +1,11 @@
 name: Test fetching data
 on:
   workflow_dispatch:
-  push:
+  pull_request:
+    types:
+      - opened
     branches:
-      - 'main'
-    paths:
-      - 'components/data_extraction/'
+      - 'features/data-extraction'
 jobs:
   fetch-data:
     runs-on: ubuntu-18.04

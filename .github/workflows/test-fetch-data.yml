@@ -25,4 +25,4 @@ jobs:
       - name: Test fetch data
         run: |
           cd components/test
-          python3 tests/data-extraction.py
+          python3 data-extraction.py

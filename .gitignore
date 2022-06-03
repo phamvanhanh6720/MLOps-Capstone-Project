@@ -6,3 +6,5 @@ crawling/test_upload_file.py
 artifacts
 artifacts_raw
 wandb
+test-pipeline.ipynb
+infer_schema.ipynb

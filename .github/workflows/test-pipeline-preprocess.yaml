@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "features/data_prerprocessing"
+      - "features/data-prerprocessing"
 jobs:
   data-preprocess:
     runs-on: ubuntu-18.04

@@ -1,0 +1,25 @@
+name: Test train
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "features/training"
+jobs:
+  run-training:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+      - name: Install dependencies
+        run: |
+          export PYTHONPATH=.
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Test training
+        run: |
+          cd  components
+          python3 test/test_train.py

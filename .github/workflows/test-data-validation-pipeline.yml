@@ -24,4 +24,5 @@ jobs:
         run: wandb login ${{ secrets.WANDB_KEY}}
       - name: Test pipeline
         run: |
-          python3 test-pipeline.py
+          cd components/test
+          python3 data-validation.py

@@ -1,6 +1,8 @@
 import json
 import requests
 import pandas as pd
+
+import wandb
 from decouple import config
 
 
@@ -30,3 +32,18 @@ def fetch_data():
     df = pd.DataFrame.from_records(json_list)
 
     return df
+
+
+def extract_data(project):
+    run = wandb.init(project=project, job_type="data-extraction")
+
+    # Create a sample dataset to log as an artifact
+    df = fetch_data()
+
+    # log data artifacts
+    dataset_artifact = wandb.Artifact('raw-dataset', type='dataset')
+    dataset_table = wandb.Table(data=df, columns=df.columns)
+    dataset_artifact.add(dataset_table, 'raw-dataset')
+    run.log_artifact(dataset_artifact)
+
+    run.finish()

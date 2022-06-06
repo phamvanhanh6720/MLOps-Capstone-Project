@@ -3,11 +3,9 @@ import logging
 import datetime
 from decouple import config
 
-import pymongo
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from urllib3.connectionpool import log
-from azure.storage.filedatalake import DataLakeServiceClient
 try:
     from importlib import resources
 except ImportError:

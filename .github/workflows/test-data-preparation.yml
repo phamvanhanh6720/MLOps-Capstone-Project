@@ -1,0 +1,28 @@
+name: Test data preparation pipeline
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "features/data-preparation"
+jobs:
+  fetch-data:
+    runs-on: ubuntu-18.04
+    env:
+      MONGO_API_KEY: ${{ secrets.MONGO_API_KEY }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.6'
+          cache: 'pip'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Login wandb
+        run: wandb login ${{ secrets.WANDB_KEY}}
+      - name: Test pipeline
+        run: |
+          cd components/test
+          python3 data-preparation.py

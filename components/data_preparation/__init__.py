@@ -1,4 +1,6 @@
 import pandas as pd
+import wandb
+
 from configs.config import *
 import category_encoders as ce
 from scipy import stats
@@ -72,44 +74,85 @@ class Transform:
         self.df_val[category_other] = self.encoder_others.transform(self.df_val[category_other])
 
     def save(self) -> None:
-        utils.save_pkl(self.encoder_branch, PATH_TRANSFORM_BRANCH)
-        utils.save_pkl(self.encoder_model, PATH_TRANSFORM_MODEL)
-        utils.save_pkl(self.encoder_others, PATH_TRANSFORM_OTHERS)
+        utils.save_pkl(self.encoder_branch, 'branch-func.pkl')
+        utils.save_pkl(self.encoder_model, 'model-func.pkl')
+        utils.save_pkl(self.encoder_others, 'other-func.pkl')
 
 
-def pipeline_preprocessing():
+def prepare_data(project):
     # Load data
-    df_train = pd.read_csv(PATH_TRAIN_DATA)
-    df_test = pd.read_csv(PATH_TEST_DATA)
-    df_valid = pd.read_csv(PATH_VALID_DATA)
-    logger.info('Load dataset Done!')
+    run = wandb.init(project=project, job_type="data-preparation")
+    artifact = run.use_artifact('train-data:latest')
+    artifact_data = artifact.get("train-data")
+    df_train = pd.DataFrame(columns=artifact_data.columns, data=artifact_data.data)
+
+    artifact = run.use_artifact('val-data:latest')
+    artifact_data = artifact.get("val-data")
+    df_val = pd.DataFrame(columns=artifact_data.columns, data=artifact_data.data)
+
+    artifact = run.use_artifact('test-data:latest')
+    artifact_data = artifact.get("test-data")
+    df_test = pd.DataFrame(columns=artifact_data.columns, data=artifact_data.data)
 
     # Process missing data
     mode = df_train.wheel_drive.mode()[0]
     mean = float(int(df_train.engine_capacity.mean()))
     df_train['wheel_drive'].fillna(value=mode, inplace=True)
-    df_valid['wheel_drive'].fillna(value=mode, inplace=True)
+    df_val['wheel_drive'].fillna(value=mode, inplace=True)
     df_test['wheel_drive'].fillna(value=mode, inplace=True)
     df_train['engine_capacity'].fillna(value=mean, inplace=True)
-    df_valid['engine_capacity'].fillna(value=mean, inplace=True)
+    df_val['engine_capacity'].fillna(value=mean, inplace=True)
     df_test['engine_capacity'].fillna(value=mean, inplace=True)
     logger.info('Process missing done!')
 
     # Filter outline
     df_train = filter_outline_target(df_train)
     df_test = filter_outline_target(df_test)
-    df_valid = filter_outline_target(df_valid)
+    df_val = filter_outline_target(df_val)
 
     df_train = filter_category_feature(filter_numeric_feature(df_train))
     df_test = filter_category_feature(filter_numeric_feature(df_test))
-    df_valid = filter_category_feature(filter_numeric_feature(df_valid))
+    df_val = filter_category_feature(filter_numeric_feature(df_val))
     logger.info('Process outline done!')
 
     # Transform data
-    transform = Transform(df_train, df_test, df_valid)
+    transform = Transform(df_train, df_test, df_val)
     transform.fit()
     transform.transform()
     transform.save()
+    # log transform func
+    artifact = wandb.Artifact('branch-func', type='Transform')
+    artifact.add_file('branch-func.pkl')
+    run.log_artifact(artifact)
+
+    artifact = wandb.Artifact('model-func', type='Transform')
+    artifact.add_file('model-func.pkl')
+    run.log_artifact(artifact)
+
+    artifact = wandb.Artifact('other-func', type='Transform')
+    artifact.add_file('other-func.pkl')
+    run.log_artifact(artifact)
+
     logger.info('Transform data done!')
-    logger.info(f'len trainset: {len(df_train)}, len validset: {len(df_valid)}, len testset: {len(df_test)}')
-    return transform.df_train[FEATURES], transform.df_val[FEATURES], transform.df_test[FEATURES]
+    logger.info(f'len trainset: {len(df_train)}, len validset: {len(df_val)}, len testset: {len(df_test)}')
+
+    transformed_train_df = transform.df_train[FEATURES]
+    transformed_val_df = transform.df_val[FEATURES]
+    transformed_test_df = transform.df_test[FEATURES]
+
+    dataset_artifact = wandb.Artifact('transformed-train-data', type='dataset')
+    dataset_table = wandb.Table(data=transformed_train_df, columns=transformed_train_df.columns)
+    dataset_artifact.add(dataset_table, 'transformed-train-data')
+    run.log_artifact(dataset_artifact)
+
+    dataset_artifact = wandb.Artifact('transformed-val-data', type='dataset')
+    dataset_table = wandb.Table(data=transformed_val_df, columns=transformed_val_df.columns)
+    dataset_artifact.add(dataset_table, 'transformed-val-data')
+    run.log_artifact(dataset_artifact)
+
+    dataset_artifact = wandb.Artifact('transformed-test-data', type='dataset')
+    dataset_table = wandb.Table(data=transformed_test_df, columns=transformed_test_df.columns)
+    dataset_artifact.add(dataset_table, 'transformed-test-data')
+    run.log_artifact(dataset_artifact)
+
+    wandb.finish()

@@ -1,11 +1,45 @@
 import pandas as pd
 import wandb
 
-from configs.config import *
 import category_encoders as ce
 from scipy import stats
 import numpy as np
 import utils
+
+
+CONFIG_DATA ={
+    "numeric":{
+        "year":{
+            "lower_limit": 2007,
+            "upper_limit":float('inf')
+        },
+        "km_driven":{
+            "lower_limit": 0,
+            "upper_limit":1e9
+        },
+        "num_seats": {
+            "lower_limit": 0,
+            "upper_limit":30
+        },
+        "engine_capacity":{
+            "lower_limit": 0,
+            "upper_limit": 10
+        }
+    },
+    "category": {
+        "origin": ['domestic', 'imported'],
+        "wheel_drive": ['FWD', 'RWD', '4WD', 'AWD'],
+        "car_type": ['sedan', 'crossover', 'hatchback', 'pickup', 'suv', 'van', 'coupe',
+                    'truck', 'convertible', 'wagon'],
+        "gearbox": ['automatic', 'manual']
+    }
+}
+
+category_other = ['external_color','internal_color','origin', 'gearbox', 'wheel_drive', 'car_type']
+
+numeric_features = ['year','price','km_driven','num_seats','engine_capacity']
+category_features = ['branch','model','origin','external_color','internal_color','gearbox','wheel_drive','car_type']
+FEATURES = numeric_features + category_features
 
 
 def detect_outline(df: pd.DataFrame, feature: str, lower_limit: float = 0,
@@ -103,7 +137,6 @@ def prepare_data(project):
     df_train['engine_capacity'].fillna(value=mean, inplace=True)
     df_val['engine_capacity'].fillna(value=mean, inplace=True)
     df_test['engine_capacity'].fillna(value=mean, inplace=True)
-    logger.info('Process missing done!')
 
     # Filter outline
     df_train = filter_outline_target(df_train)
@@ -113,7 +146,6 @@ def prepare_data(project):
     df_train = filter_category_feature(filter_numeric_feature(df_train))
     df_test = filter_category_feature(filter_numeric_feature(df_test))
     df_val = filter_category_feature(filter_numeric_feature(df_val))
-    logger.info('Process outline done!')
 
     # Transform data
     transform = Transform(df_train, df_test, df_val)
@@ -132,9 +164,6 @@ def prepare_data(project):
     artifact = wandb.Artifact('other-func', type='Transform')
     artifact.add_file('other-func.pkl')
     run.log_artifact(artifact)
-
-    logger.info('Transform data done!')
-    logger.info(f'len trainset: {len(df_train)}, len validset: {len(df_val)}, len testset: {len(df_test)}')
 
     transformed_train_df = transform.df_train[FEATURES]
     transformed_val_df = transform.df_val[FEATURES]

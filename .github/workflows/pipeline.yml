@@ -4,6 +4,8 @@ on:
 jobs:
   training:
     runs-on: ubuntu-18.04
+    env:
+      MONGO_API_KEY: ${{ secrets.MONGO_API_KEY }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python

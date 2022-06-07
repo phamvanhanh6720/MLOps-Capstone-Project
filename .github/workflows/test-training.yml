@@ -25,4 +25,4 @@ jobs:
       - name: Test pipeline
         run: |
           cd components/test
-          python3 training.py
+          python3 test-training.py

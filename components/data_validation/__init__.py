@@ -57,6 +57,8 @@ def infer_schema(project: str, artifact_name='raw-dataset:latest', filename='raw
 
     if not is_running:
         wandb.finish()
+    else:
+        return schema
 
 
 def get_schema(project, artifact_name='text-schema:latest', is_running=True, run=None):

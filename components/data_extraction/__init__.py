@@ -46,4 +46,4 @@ def extract_data(project):
     dataset_artifact.add(dataset_table, 'raw-dataset')
     run.log_artifact(dataset_artifact)
 
-    run.finish()
+    wandb.finish()

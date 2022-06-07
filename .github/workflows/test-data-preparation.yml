@@ -5,7 +5,7 @@ on:
     branches:
       - "features/data-preparation"
 jobs:
-  fetch-data:
+  data-preparation:
     runs-on: ubuntu-18.04
     env:
       MONGO_API_KEY: ${{ secrets.MONGO_API_KEY }}

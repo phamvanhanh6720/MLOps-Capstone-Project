@@ -4,7 +4,7 @@ import wandb
 import category_encoders as ce
 from scipy import stats
 import numpy as np
-import utils
+import pickle
 
 
 CONFIG_DATA ={
@@ -40,6 +40,16 @@ category_other = ['external_color','internal_color','origin', 'gearbox', 'wheel_
 numeric_features = ['year','price','km_driven','num_seats','engine_capacity']
 category_features = ['branch','model','origin','external_color','internal_color','gearbox','wheel_drive','car_type']
 FEATURES = numeric_features + category_features
+
+
+def save_pkl(data, path):
+    output = open(path, 'wb')
+    pickle.dump(data, output)
+    output.close()
+
+def load_pkl(path):
+    pkl_file = open(path, 'rb')
+    return pickle.load(pkl_file)
 
 
 def detect_outline(df: pd.DataFrame, feature: str, lower_limit: float = 0,
@@ -108,9 +118,9 @@ class Transform:
         self.df_val[category_other] = self.encoder_others.transform(self.df_val[category_other])
 
     def save(self) -> None:
-        utils.save_pkl(self.encoder_branch, 'branch-func.pkl')
-        utils.save_pkl(self.encoder_model, 'model-func.pkl')
-        utils.save_pkl(self.encoder_others, 'other-func.pkl')
+        save_pkl(self.encoder_branch, 'branch-func.pkl')
+        save_pkl(self.encoder_model, 'model-func.pkl')
+        save_pkl(self.encoder_others, 'other-func.pkl')
 
 
 def prepare_data(project):

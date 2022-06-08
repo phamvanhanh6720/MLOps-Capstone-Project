@@ -1,11 +1,11 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'asia-east1-docker.pkg.dev/$PROJECT_ID/mlops/api', '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/mlops-api', '.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'asia-east1-docker.pkg.dev/$PROJECT_ID/mlops/api']
+  args: ['push', 'gcr.io/$PROJECT_ID/mlops-api']
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'mlops-api', '--image=us-west2-docker.pkg.dev/$PROJECT_ID/mlops/api', '- -region=asia-east1', '--platform=managed']
+  args: ['run', 'deploy', 'mlops-api', '--image=gcr.io/$PROJECT_ID/mlops-api', '- -region=asia-east1', '--platform=managed']
 
 images:
-  - asia-east1-docker.pkg.dev/$PROJECT_ID/mlops/api
+  - gcr.io/$PROJECT_ID/mlops-api

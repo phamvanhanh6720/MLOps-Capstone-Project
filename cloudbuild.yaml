@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+   args: ['build', '-t', 'us-west2-docker.pkg.dev/$PROJECT_ID/mlops/api', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-west2-docker.pkg.dev/$PROJECT_ID/mlops/api']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['beta', 'run', 'deploy', 'mlops-example', '--image=gcr.io/mlops-example/github.com/anderdecidata/mlops-example:$SHORT_SHA', '- -region=europe-west1', '--platform=managed']

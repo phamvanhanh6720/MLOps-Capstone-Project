@@ -16,6 +16,4 @@ RUN pip install -r requirements.txt
 
 RUN wandb login 0f67acb5170832a98b80da3cf33a8a2b8d935898
 
-EXPOSE $PORT
-
-CMD ["uvicorn", "api:api", "--port", $PORT, "--host", "0.0.0.0"]
+CMD uvicorn api:api --port :$PORT --host 0.0.0.0

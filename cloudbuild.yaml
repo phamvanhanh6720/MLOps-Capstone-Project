@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-   args: ['build', '-t', 'asia-east1-docker.pkg.dev/$PROJECT_ID/mlops/api', '.']
+  args: ['build', '-t', 'asia-east1-docker.pkg.dev/$PROJECT_ID/mlops/api', '.']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'asia-east1-docker.pkg.dev/$PROJECT_ID/mlops/api']
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'

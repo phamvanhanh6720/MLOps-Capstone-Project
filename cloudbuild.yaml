@@ -9,3 +9,4 @@ steps:
 
 images:
   - gcr.io/$PROJECT_ID/mlops-api
+timeout: 1200s

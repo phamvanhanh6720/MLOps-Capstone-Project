@@ -16,6 +16,6 @@ RUN pip install -r requirements.txt
 
 RUN wandb login 0f67acb5170832a98b80da3cf33a8a2b8d935898
 
-EXPOSE 8002
+EXPOSE 8080
 
-CMD ["uvicorn", "api:api", "--port", "8002", "--host", "0.0.0.0"]
+CMD ["uvicorn", "api:api", "--port", "8080", "--host", "0.0.0.0"]

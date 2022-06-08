@@ -5,7 +5,7 @@ steps:
   args: ['push', 'gcr.io/$PROJECT_ID/mlops-api']
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'mlops-api', '--image=gcr.io/$PROJECT_ID/mlops-api', '- -region=asia-east1', '--platform=managed']
+  args: ['run', 'deploy', 'mlops-api', '--image=gcr.io/$PROJECT_ID/mlops-api', '--region=asia-east1', '--platform=managed']
 
 images:
   - gcr.io/$PROJECT_ID/mlops-api

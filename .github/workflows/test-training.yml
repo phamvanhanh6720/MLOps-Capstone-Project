@@ -1,6 +1,7 @@
 name: Test training pipeline
 on:
-  workflow_dispatch:
+  repository_dispatch:
+    types: [train]
   push:
     branches:
       - "features/training"

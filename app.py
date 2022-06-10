@@ -45,7 +45,7 @@ car_type = st.sidebar.selectbox(label='Car Type', options=car_type_list, index=6
 is_predict = st.button('Click here to predict')
 
 if is_predict:
-    predict_api = 'http://phamvanhanh.ddns.net:8080/api/predict'
+    predict_api = 'http://localhost:8080/api/predict'
     data = {'year': year,
             'location': '',
             'branch': branch,
